@@ -1,0 +1,12 @@
+{
+  "name": "foo",
+  "type": "module",
+  "version": "0.0.0",
+  "author": "ich",
+  "license": "MIT",
+  "scripts": {
+    "tsc": "tsc --noEmit",
+    "dev": "vite",
+    "build": "vite build"
+  }
+}

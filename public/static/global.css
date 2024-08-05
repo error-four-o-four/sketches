@@ -1,0 +1,6 @@
+body {
+  margin: 0;
+  background-color: hsl(0, 0%, 10%);
+  color: #eee;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}

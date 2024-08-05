@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+		"target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+		"lib": ["ESNext", "DOM"],
+
+		"strict": true,
+    "types": ["p5"],
+  },
+  "exclude": [
+    "**/node_modules",
+    "node_modules",
+    "public",
+    "shared",
+    "**/dist",
+    "dist"
+  ],
+}

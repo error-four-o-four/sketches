@@ -1,0 +1,22 @@
+{
+  "name": "sketches",
+  "type": "module",
+  "version": "0.0.0",
+  "workspaces": [
+    "sketches/*"
+  ],
+  "scripts": {
+    "create": "tsx scripts/create.ts",
+    "dev": "vite",
+    "build": "tsx scripts/build/index.ts",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/node": "^22.1.0",
+    "@types/p5": "^1.7.6",
+    "esbuild": "^0.23.0",
+    "node-html-parser": "^6.1.13",
+    "tsx": "^4.16.5",
+    "vite": "^5.3.5"
+  }
+}

@@ -1,0 +1,28 @@
+#container {
+	position: relative;
+	padding: 4rem 2rem;
+}
+
+main ul {
+	list-style: none;
+
+	li {
+		display: block;
+		padding: 0.5rem;
+	}
+
+	a {
+		color: #ddd;
+	}
+
+	a:hover {
+		color: #ed225d;
+	}
+
+	span {
+		display: inline-block;
+		margin-left: 0.625rem;
+		font-size: 0.8rem;
+		color: #999;
+	}
+}

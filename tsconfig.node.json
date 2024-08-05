@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+
+		"skipLibCheck": true,
+    "esModuleInterop": true,
+		"lib": ["ESNext"],
+
+		"strict": true,
+		"types": ["node", "vite/client"],
+	},
+	"exclude": [
+		"**/node_modules",
+    "node_modules",
+    "public",
+		"shared",
+    "**/dist",
+    "dist"
+	]
+}
