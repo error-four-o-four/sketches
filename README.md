@@ -1,4 +1,4 @@
-# Sketches
+# [Sketches](https://error-four-o-four.github.io/sketches/)
 
 ### cli options
 
