@@ -10,12 +10,15 @@ const dirname = {
 	templates: 'templates',
 };
 
-
 (async () => {
 	const options: ParseArgsConfig['options'] = {
 		name: {
 			type: 'string',
 			short: 'n'
+		},
+		tmpl: {
+			type: 'string',
+			short: 't'
 		},
 		source: {
 			type: 'string',
@@ -34,7 +37,9 @@ const dirname = {
 	});
 
 	const target = getTargetPath(parsed);
-	const source = getSourcePath(parsed);
+
+	const sourceValue = parsed.values.src ?? parsed.values.source;
+	const source = sourceValue ? getSourcePath(sourceValue) : getTemplatePath(parsed);
 
 	await copySourceFiles(source, target);
 	updatePackageJson(target);
@@ -72,31 +77,47 @@ function getTargetPath({ values, positionals }: ReturnType<typeof parseArgs>) {
 	process.exit(1);
 }
 
-function getSourcePath({ values }: ReturnType<typeof parseArgs>) {
-	const source = values.src ?? values.source;
 
-	if (!source) return np.resolve('./', dirname.sketches, 'template');
+function getTemplatePath({ values }: ReturnType<typeof parseArgs>) {
+	const source = values.tmpl;
+
+	if (!source) return np.resolve('./', dirname.templates, 'instance');
+
+	const possible = getFolders(dirname.templates);
 
 	if (typeof source === 'string') {
-		// const possible = [
-		// 	...getFolders(dirname.sketches),
-		// 	...getFolders(dirname.templates)
-		// ];
 
-		// if (possible.includes(source)) {
-		// 	return source;
-		// }
+		if (possible.includes(source)) {
+			return np.resolve('./', dirname.templates, source);
+		}
 
-		if (getFolders(dirname.sketches).includes(source)) {
+		console.log('Could not determine template project %o', source);
+		console.log(getFoldersMessage(possible), ...possible);
+		process.exit(1);
+	}
+
+	const arg = ['--tmpl', '-t'].find(val => process.argv.includes(val));
+	console.log('Invalid value for argument %o', arg);
+	console.log(getFoldersMessage(possible), ...possible);
+	process.exit(1);
+}
+
+function getSourcePath(source: string | boolean) {
+	const possible = getFolders(dirname.sketches);
+
+	if (typeof source === 'string') {
+		if (possible.includes(source)) {
 			return np.resolve('./', dirname.sketches, source);
 		}
 
 		console.log('Could not determine source project %o', source);
+		console.log(getFoldersMessage(possible), ...possible);
 		process.exit(1);
 	}
 
 	const arg = ['--source', '--src', '-s'].find(val => process.argv.includes(val));
 	console.log('Invalid value for argument %o', arg);
+	console.log(getFoldersMessage(possible), ...possible);
 	process.exit(1);
 }
 
@@ -110,6 +131,10 @@ function getFolders(dir: string) {
 	}
 
 	return [];
+}
+
+function getFoldersMessage(values: string[]) {
+	return `Use one of these ${Array.from({ length: values.length }, () => '%o').join(', ')}`;
 }
 
 async function copySourceFiles(from: string, to: string) {
@@ -137,6 +162,7 @@ async function copySourceFiles(from: string, to: string) {
 	} catch (error) {
 		logError(error);
 		console.log('❌ Failed');
+		process.exit(1);
 	}
 }
 
@@ -144,11 +170,19 @@ function updatePackageJson(absDirPath: string) {
 	const path = np.join(absDirPath, 'package.json');
 	const pkg = parseJson(path);
 
+	const names = getPackageNames();
 	let name = np.basename(absDirPath).replace(rx.isoDate, '').slice(1);
 
 	/** @todo it could also be possible to get and set <root><package.json>.workspaces explicitely */
-	if (getPackageNames().includes(name)) {
-		const fallback = name + 'x';
+	if (names.includes(name)) {
+		let i = 1;
+		let fallback = `${name}${i}`;
+
+		while (names.includes(fallback)) {
+			i += 1;
+			fallback = `${name}${i}`;
+		}
+
 		console.warn('Project name %o is already used. Renaming Project to %o', name, fallback);
 		console.warn('Consider to rename the project manually');
 		name = fallback;

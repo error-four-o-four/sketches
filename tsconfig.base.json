@@ -9,7 +9,6 @@
 		"lib": ["ESNext", "DOM"],
 
 		"strict": true,
-    "types": ["p5"],
   },
   "exclude": [
     "**/node_modules",

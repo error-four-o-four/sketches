@@ -21,6 +21,9 @@ const config: UserConfigFn = ({ mode }) => {
 			copyPublicDir: false,
 			minify: false,
 			rollupOptions,
+		},
+		server: {
+			open: true
 		}
 	});
 };

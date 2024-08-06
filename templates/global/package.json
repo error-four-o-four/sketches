@@ -1,5 +1,5 @@
 {
-  "name": "template",
+  "name": "tmpl-global-mode",
   "type": "module",
   "version": "0.0.0",
   "scripts": {

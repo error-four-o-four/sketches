@@ -2,7 +2,7 @@ import { P5 } from "./types";
 
 export const sketch = (p: P5) => {
 	p.setup = function () {
-		p.createCanvas(200, 200);
+		p.createCanvas(300, 300);
 		p.colorMode(p.HSL);
 		p.textStyle(p.BOLD);
 		p.textAlign(p.CENTER, p.CENTER);
@@ -14,6 +14,6 @@ export const sketch = (p: P5) => {
 		p.background(hue, 100, 50);
 		p.noStroke();
 		p.fill((hue + 120) % 360, 100, 50);
-		p.text('template', 0.5 * p.width, 0.5 * p.height);
+		p.text('instance template', 0.5 * p.width, 0.5 * p.height);
 	};
 };

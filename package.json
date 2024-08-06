@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "workspaces": [
     "sketches/*",
+    "templates/*",
     "cli"
   ],
   "scripts": {
@@ -12,7 +13,7 @@
     "preview": "vite preview"
   },
   "bin": {
-    "create": "cli/dist/create.mjs"
+    "create": "cli/dist/create.cjs"
   },
   "devDependencies": {
     "@types/node": "^22.1.0",
