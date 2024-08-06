@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import type { UserConfigFn, BuildOptions } from 'vite';
+import type { UserConfigFn } from 'vite';
 
 const config: UserConfigFn = ({ mode, command }) => {
 	if (mode === 'production' && command === 'serve') {

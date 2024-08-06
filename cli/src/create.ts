@@ -43,6 +43,8 @@ const dirname = {
 
 	await copySourceFiles(source, target);
 	updatePackageJson(target);
+
+	console.log('✅ Done');
 })();
 
 
@@ -157,11 +159,8 @@ async function copySourceFiles(from: string, to: string) {
 			});
 
 		await Promise.all(promised);
-
-		console.log('✅ Done');
 	} catch (error) {
 		logError(error);
-		console.log('❌ Failed');
 		process.exit(1);
 	}
 }
