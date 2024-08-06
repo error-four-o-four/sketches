@@ -3,13 +3,16 @@
   "type": "module",
   "version": "0.0.0",
   "workspaces": [
-    "sketches/*"
+    "sketches/*",
+    "cli"
   ],
   "scripts": {
-    "create": "tsx scripts/create.ts",
     "dev": "vite",
     "build": "tsx scripts/build/index.ts",
     "preview": "vite preview"
+  },
+  "bin": {
+    "create": "cli/dist/create.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.1.0",

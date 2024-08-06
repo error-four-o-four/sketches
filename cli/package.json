@@ -1,0 +1,14 @@
+{
+  "name": "cli",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "tsc --noEmit && vite build"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "rollup-plugin-node-externals": "^7.1.2"
+  }
+}
