@@ -3,7 +3,7 @@
 import np from 'node:path';
 import fs, { promises as fp } from 'node:fs';
 import { parseArgs, type ParseArgsConfig } from 'node:util';
-import { rx, logError, parseJson, writeJson } from './utils/index.js';
+import { rx, logError, parseJson, writeJson, getFolders } from './utils/index.js';
 
 const dirname = {
 	sketches: 'sketches',
@@ -121,18 +121,6 @@ function getSourcePath(source: string | boolean) {
 	console.log('Invalid value for argument %o', arg);
 	console.log(getFoldersMessage(possible), ...possible);
 	process.exit(1);
-}
-
-function getFolders(dir: string) {
-	try {
-		return fs.readdirSync(np.resolve(dir), { withFileTypes: true })
-			.filter(item => item.isDirectory())
-			.map(item => item.name);
-	} catch (error) {
-		logError(error);
-	}
-
-	return [];
 }
 
 function getFoldersMessage(values: string[]) {

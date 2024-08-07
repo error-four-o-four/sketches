@@ -1,4 +1,5 @@
-import { readFileSync, writeFileSync } from "fs";
+import { resolve } from "node:path";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 
 export const rx = {
 	isoDate: /^\d{4}-\d{1,2}-\d{1,2}/,
@@ -24,4 +25,17 @@ export function parseJson(path: string) {
 
 export function writeJson(path: string, data: unknown) {
 	writeFileSync(path, JSON.stringify(data, null, 2));
+}
+
+
+export function getFolders(dir: string) {
+	try {
+		return readdirSync(resolve(dir), { withFileTypes: true })
+			.filter(item => item.isDirectory())
+			.map(item => item.name);
+	} catch (error) {
+		logError(error);
+	}
+
+	return [];
 }

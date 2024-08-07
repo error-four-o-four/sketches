@@ -13,7 +13,8 @@
     "preview": "vite preview"
   },
   "bin": {
-    "create": "cli/dist/create.cjs"
+    "create": "cli/dist/create.cjs",
+    "fetch": "cli/dist/fetch.cjs"
   },
   "devDependencies": {
     "@types/node": "^22.1.0",
