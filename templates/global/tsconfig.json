@@ -1,14 +1,9 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.sketch.json",
   "compilerOptions": {
     "types": ["p5/global"]
   },
   "include": [
     "./src"
   ],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
 }

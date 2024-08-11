@@ -1,7 +1,10 @@
 {
 	"extends": "./tsconfig.node.json",
 	"include": [
-		"scripts/**/*.ts",
-		"vite.config.ts"
-	],
+		"**/vite.config.ts",
+		"vite.config.ts",
+		"vite.options.ts",
+		"vite.plugin.ts",
+		"vite.sketch.ts",
+	]
 }

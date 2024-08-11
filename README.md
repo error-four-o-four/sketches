@@ -26,5 +26,5 @@ use `npm run dev -w foo` to work on a single sketch
 use `npm run build -w foo` to create a start point for a new sketch on [open processing](https://openprocessing.org/)
 
 use `npm run build` to bundle the files, which will be deployed to github\
-update included [sketches](./scripts/build/config.ts) to specify the deployed files\
+update included [sketches](./vite.options.ts) to specify the deployed files\
 use `npm run preview` to test deployed files locally

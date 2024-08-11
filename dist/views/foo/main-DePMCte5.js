@@ -1,1 +1,0 @@
-(function(){"use strict";const r=e=>{e.setup=function(){e.createCanvas(200,200),e.colorMode(e.HSL),e.textStyle(e.BOLD),e.textAlign(e.CENTER,e.CENTER),e.textSize(24)},e.draw=function(){const t=e.frameCount%360;e.background(t,100,50),e.noStroke(),e.fill((t+120)%360,100,50),e.text("template",.5*e.width,.5*e.height)}};new window.p5(r,document.getElementById("wrapper"))})();

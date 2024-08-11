@@ -1,7 +1,7 @@
 {
   "name": "sketches",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "workspaces": [
     "sketches/*",
     "templates/*",
@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsx scripts/build/index.ts",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "bin": {
@@ -21,7 +21,6 @@
     "@types/p5": "^1.7.6",
     "esbuild": "^0.23.0",
     "node-html-parser": "^6.1.13",
-    "tsx": "^4.16.5",
     "vite": "^5.3.5"
   }
 }
