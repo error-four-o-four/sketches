@@ -1,0 +1,22 @@
+{
+  "name": "@internal/cli",
+  "type": "module",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "pkgroll --watch",
+    "build": "tsc --noEmit && pkgroll --minify"
+  },
+  "bin": {
+    "create": "./dist/create.cjs",
+    "fetch": "./dist/fetch.cjs"
+  },
+  "devDependencies": {
+    "pkgroll": "^2.4.2",
+    "rollup-plugin-node-externals": "^7.1.2"
+  },
+  "dependencies": {
+    "@internal/cdn": "file:../cdn"
+  }
+}

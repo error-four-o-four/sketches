@@ -121,8 +121,7 @@ export type BuildSketchesOptions = {
 	subDirStatic: string;
 	subDirViews: string;
 	base: string;
-	sketches: SketchData[];
-	libs: Record<string, LibraryData>;
+	data: SketchData[];
 };
 
 export function buildSketches(options: BuildSketchesOptions): Plugin {
@@ -149,7 +148,7 @@ export function buildSketches(options: BuildSketchesOptions): Plugin {
 		async closeBundle() {
 			await nfp.mkdir(options.outPath);
 
-			const sketches = options.sketches.map((sketch) => buildSketch(sketch));
+			const sketches = options.data.map((sketch) => buildSketch(sketch));
 
 			await Promise.all(sketches);
 		},

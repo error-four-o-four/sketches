@@ -4,8 +4,6 @@ import { fileURLToPath } from 'node:url';
 
 import { createLogger } from 'vite';
 
-import { parseJson, rx } from './cli/src/utils/index.js';
-
 import type {
 	SketchData,
 	TransformOptions,
@@ -46,7 +44,7 @@ const data = createData();
 export const transformOptions: TransformOptions = {
 	base,
 	subDir: subDirnameViews,
-	data: data.sketches,
+	data,
 };
 
 export const bundleOptions: BuildSketchesOptions = {
@@ -55,7 +53,7 @@ export const bundleOptions: BuildSketchesOptions = {
 	subDirStatic: subDirnameStatic,
 	subDirViews: subDirnameViews,
 	base,
-	...data,
+	data,
 };
 
 export const assetsOptions: StaticAssetsOptions = {
@@ -63,22 +61,12 @@ export const assetsOptions: StaticAssetsOptions = {
 	outPath: np.join(outDirPath, subDirnameStatic),
 };
 
-function createData() {
-	const sketches: BuildSketchesOptions['sketches'] = input
-		.map((folder) => toData(folder))
-		.sort((a, b) => sortData(a, b));
-
-	const libs: BuildSketchesOptions['libs'] =
-		parseJson(np.join(publicDirPath, 'libs.json')) ?? {};
-
-	return {
-		sketches,
-		libs,
-	};
+function createData(): BuildSketchesOptions['data'] {
+	return input.map((folder) => toData(folder)).sort((a, b) => sortData(a, b));
 }
 
 function toData(folder: string): SketchData {
-	const match = folder.match(rx.isoDate);
+	const match = folder.match(/^\d{4}-\d{1,2}-\d{1,2}/);
 	const entry = np.join(root, folder);
 
 	let name: string;

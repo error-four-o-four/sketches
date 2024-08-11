@@ -1,24 +1,29 @@
 #!/usr/bin/env node
 
 import np from 'node:path';
-import fs, { promises as fp } from 'node:fs';
+import nfs, { promises as nfp } from 'node:fs';
 import { parseArgs, type ParseArgsConfig } from 'node:util';
-import { rx, logError, parseJson, writeJson, getFolders } from './utils/index.js';
+import { logError, parseJson, writeJson } from '@internal/cdn';
 
 const dirname = {
 	sketches: 'sketches',
 	templates: 'templates',
+} as const;
+
+const regex = {
+	isoDate: /^\d{4}-\d{1,2}-\d{1,2}/,
+	targetFolder: /^\d{4}-\d{1,2}-\d{1,2}-\w+/,
 };
 
 (async () => {
 	const options: ParseArgsConfig['options'] = {
 		name: {
 			type: 'string',
-			short: 'n'
+			short: 'n',
 		},
 		tmpl: {
 			type: 'string',
-			short: 't'
+			short: 't',
 		},
 		source: {
 			type: 'string',
@@ -26,7 +31,7 @@ const dirname = {
 		src: {
 			type: 'string',
 			short: 's',
-		}
+		},
 	};
 
 	const parsed = parseArgs({
@@ -39,7 +44,9 @@ const dirname = {
 	const target = getTargetPath(parsed);
 
 	const sourceValue = parsed.values.src ?? parsed.values.source;
-	const source = sourceValue ? getSourcePath(sourceValue) : getTemplatePath(parsed);
+	const source = sourceValue
+		? getSourcePath(sourceValue)
+		: getTemplatePath(parsed);
 
 	await copySourceFiles(source, target);
 	updatePackageJson(target);
@@ -47,13 +54,18 @@ const dirname = {
 	console.log('✅ Done');
 })();
 
-
 function getTargetPath({ values, positionals }: ReturnType<typeof parseArgs>) {
-	const name = positionals[0] === process.argv[2] ? positionals[0] : values.name;
+	const name =
+		positionals[0] === process.argv[2] ? positionals[0] : values.name;
 
 	if (!name) {
-		console.log("Please submit a name to create a new project");
-		console.log("e.g. 'npx create foo', 'npx create --name foo' or 'npx create --name=foo'");
+		console.log('Please provide a name to create a new project');
+		console.log(
+			'e.g. %o, %o or %o',
+			'npx create foo',
+			'npx create --name foo',
+			'npx create --name=foo'
+		);
 		process.exit(1);
 	}
 
@@ -62,23 +74,23 @@ function getTargetPath({ values, positionals }: ReturnType<typeof parseArgs>) {
 	}
 
 	if (typeof name === 'string') {
-		const target = rx.targetFolder.test(name)
+		const target = regex.targetFolder.test(name)
 			? name
 			: `${new Date().toISOString().split('T')[0]}-${name}`;
 
 		if (!getFolders(dirname.sketches).includes(target)) {
 			return np.resolve('./', dirname.sketches, target);
-		};
+		}
 
 		console.log('project %o already exists', target);
 		process.exit(1);
 	}
 
-	const arg = ['--name', '-n'].find(val => process.argv.includes(val)) ?? 'name';
+	const arg =
+		['--name', '-n'].find((val) => process.argv.includes(val)) ?? 'name';
 	console.log('Invalid value for argument %o', arg);
 	process.exit(1);
 }
-
 
 function getTemplatePath({ values }: ReturnType<typeof parseArgs>) {
 	const source = values.tmpl;
@@ -88,7 +100,6 @@ function getTemplatePath({ values }: ReturnType<typeof parseArgs>) {
 	const possible = getFolders(dirname.templates);
 
 	if (typeof source === 'string') {
-
 		if (possible.includes(source)) {
 			return np.resolve('./', dirname.templates, source);
 		}
@@ -98,7 +109,7 @@ function getTemplatePath({ values }: ReturnType<typeof parseArgs>) {
 		process.exit(1);
 	}
 
-	const arg = ['--tmpl', '-t'].find(val => process.argv.includes(val));
+	const arg = ['--tmpl', '-t'].find((val) => process.argv.includes(val));
 	console.log('Invalid value for argument %o', arg);
 	console.log(getFoldersMessage(possible), ...possible);
 	process.exit(1);
@@ -117,7 +128,9 @@ function getSourcePath(source: string | boolean) {
 		process.exit(1);
 	}
 
-	const arg = ['--source', '--src', '-s'].find(val => process.argv.includes(val));
+	const arg = ['--source', '--src', '-s'].find((val) =>
+		process.argv.includes(val)
+	);
 	console.log('Invalid value for argument %o', arg);
 	console.log(getFoldersMessage(possible), ...possible);
 	process.exit(1);
@@ -131,19 +144,20 @@ async function copySourceFiles(from: string, to: string) {
 	console.log('Creating new sketch in %o', to);
 
 	try {
-		fs.mkdirSync(to);
+		nfs.mkdirSync(to);
 
 		let source: string;
 		let target: string;
 
 		/** @todo get outDir from vite.config.ts if from.includes(dirname.sketches) */
-		const promised = fs.readdirSync(from)
+		const promised = nfs
+			.readdirSync(from)
 			.filter((item): item is string => typeof item === 'string')
-			.filter(item => !/^node_module|^dist|^\.vite/.test(item))
-			.map(item => {
+			.filter((item) => !/^node_module|^dist|^\.vite/.test(item))
+			.map((item) => {
 				source = np.resolve(from, item);
 				target = np.resolve(to, item);
-				return fp.cp(source, target, { recursive: true });
+				return nfp.cp(source, target, { recursive: true });
 			});
 
 		await Promise.all(promised);
@@ -158,7 +172,7 @@ function updatePackageJson(absDirPath: string) {
 	const pkg = parseJson(path);
 
 	const names = getPackageNames();
-	let name = np.basename(absDirPath).replace(rx.isoDate, '').slice(1);
+	let name = np.basename(absDirPath).replace(regex.isoDate, '').slice(1);
 
 	/** @todo it could also be possible to get and set <root><package.json>.workspaces explicitely */
 	if (names.includes(name)) {
@@ -170,7 +184,11 @@ function updatePackageJson(absDirPath: string) {
 			fallback = `${name}${i}`;
 		}
 
-		console.warn('Project name %o is already used. Renaming Project to %o', name, fallback);
+		console.warn(
+			'Project name %o is already in use. Renaming Project to %o',
+			name,
+			fallback
+		);
 		console.warn('Consider to rename the project manually');
 		name = fallback;
 	}
@@ -182,7 +200,30 @@ function updatePackageJson(absDirPath: string) {
 
 function getPackageNames() {
 	return getFolders(dirname.sketches)
-		.map(dir => np.resolve('./', dirname.sketches, dir, 'package.json'))
-		.filter(path => fs.existsSync(path))
-		.map(path => parseJson(path).name);
+		.map((dir) => np.resolve('./', dirname.sketches, dir, 'package.json'))
+		.filter((path) => nfs.existsSync(path))
+		.map((path) => parseJson(path).name);
+}
+
+type ReadOptions = Parameters<typeof nfp.readdir>[1];
+
+function getFolders(directory: string, customOptions?: ReadOptions) {
+	const options: ReadOptions = {
+		...{
+			recursive: false,
+			withFileTypes: true,
+		},
+		...customOptions,
+	};
+
+	try {
+		return nfs
+			.readdirSync(np.resolve(directory), options)
+			.filter((item) => item.isDirectory())
+			.map((item) => item.name);
+	} catch (error) {
+		logError(error);
+	}
+
+	return [];
 }

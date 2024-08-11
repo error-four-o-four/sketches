@@ -15,11 +15,12 @@
     "preview": "vite preview"
   },
   "bin": {
-    "create": "./cli/dist/create.cjs",
-    "fetch": "./cli/dist/fetch.cjs"
+    "create": "@internal/cli/create",
+    "fetch": "@internal/cli/fetch"
   },
   "devDependencies": {
     "@internal/cdn": "^0.0.1",
+    "@internal/cli": "^0.0.1",
     "@types/node": "^22.1.0",
     "@types/p5": "^1.7.6",
     "esbuild": "^0.23.0",
