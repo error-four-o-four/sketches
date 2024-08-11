@@ -24,7 +24,7 @@ customLogger.info = (msg, opts) => {
 
 export type SketchData = {
 	root: string;
-	name: string,
+	name: string;
 	date: string;
 	outDir: string;
 };
@@ -35,15 +35,20 @@ export type TransformOptions = {
 	subDir: string;
 };
 
-export function transformIndexHtml({ data, base, subDir }: TransformOptions): Plugin {
-	const content = data.reduce((output, input) => {
-		const { name, date } = input;
-		const href = `/${base}/${subDir}/${name}/`;
-		const alt = `Link to ${name}`;
-		const title = name.charAt(0).toLocaleUpperCase() + name.slice(1);
-		const span = !!date ? `<span>(${date})</span>` : '';
-		return `${output}\n\t\t\t\t\t<li><a href="${href}" alt="${alt}">${title}</a>${span}</li>`;
-	}, '') + '\n\t\t\t\t';
+export function transformIndexHtml({
+	data,
+	base,
+	subDir,
+}: TransformOptions): Plugin {
+	const content =
+		data.reduce((output, input) => {
+			const { name, date } = input;
+			const href = `/${base}/${subDir}/${name}/`;
+			const alt = `Link to ${name}`;
+			const title = name.charAt(0).toLocaleUpperCase() + name.slice(1);
+			const span = !!date ? `<span>(${date})</span>` : '';
+			return `${output}\n\t\t\t\t\t<li><a href="${href}" alt="${alt}">${title}</a>${span}</li>`;
+		}, '') + '\n\t\t\t\t';
 
 	return {
 		name: 'transform-index-html',
@@ -61,8 +66,8 @@ export function transformIndexHtml({ data, base, subDir }: TransformOptions): Pl
 				list.insertAdjacentHTML('afterbegin', content);
 
 				return root.toString();
-			}
-		}
+			},
+		},
 	};
 }
 
@@ -71,18 +76,21 @@ export type StaticAssetsOptions = {
 	outPath: string;
 };
 
-export function copyStaticAssets({ srcPath, outPath }: StaticAssetsOptions): Plugin {
+export function copyStaticAssets({
+	srcPath,
+	outPath,
+}: StaticAssetsOptions): Plugin {
 	return {
 		name: 'copy-static assets',
 		async closeBundle() {
 			const options: Parameters<typeof nfp.readdir>[1] = {
 				recursive: true,
-				withFileTypes: true
+				withFileTypes: true,
 			};
 
 			const folders = (await nfp.readdir(srcPath, options))
-				.filter(item => item.isDirectory())
-				.map(item => {
+				.filter((item) => item.isDirectory())
+				.map((item) => {
 					const path = np.join(outPath, item.name);
 					return nfp.mkdir(path, { recursive: true });
 				});
@@ -90,8 +98,8 @@ export function copyStaticAssets({ srcPath, outPath }: StaticAssetsOptions): Plu
 			await Promise.all(folders);
 
 			const files = (await nfp.readdir(srcPath, options))
-				.filter(item => item.isFile())
-				.map(item => np.join(item.path, item.name));
+				.filter((item) => item.isFile())
+				.map((item) => np.join(item.path, item.name));
 
 			await esbuild({
 				entryPoints: files,
@@ -101,9 +109,9 @@ export function copyStaticAssets({ srcPath, outPath }: StaticAssetsOptions): Plu
 					// '.png': 'dataurl',
 					'.svg': 'copy',
 				},
-				logLevel: 'info'
+				logLevel: 'info',
 			});
-		}
+		},
 	};
 }
 
@@ -130,9 +138,7 @@ export function buildSketches(options: BuildSketchesOptions): Plugin {
 				copyPublicDir: false,
 				minify: true,
 			},
-			plugins: [
-				transformSketch(data)
-			],
+			plugins: [transformSketch(data)],
 			customLogger,
 		});
 	};
@@ -142,16 +148,16 @@ export function buildSketches(options: BuildSketchesOptions): Plugin {
 		async closeBundle() {
 			await nfp.mkdir(options.outPath);
 
-			const sketches = options.sketches.map(sketch => buildSketch(sketch));
+			const sketches = options.sketches.map((sketch) => buildSketch(sketch));
 
 			await Promise.all(sketches);
-		}
+		},
 	};
 }
 
 type ScriptSrcParsed = {
-	key: string,
-	version: Semver,
+	key: string;
+	version: Semver;
 };
 
 type ScriptAttributes = {
@@ -169,7 +175,10 @@ function createTransformPlugin(
 	const keys = new Set(Object.keys(libs));
 
 	const parseScriptSrc = (script: HTMLElement): ScriptSrcParsed => {
-		const [key, version] = script.attributes.src.slice(1).split('/') as [string, Semver];
+		const [key, version] = script.attributes.src.slice(1).split('/') as [
+			string,
+			Semver,
+		];
 
 		return {
 			key,
@@ -178,10 +187,10 @@ function createTransformPlugin(
 	};
 
 	const getScripts = (root: HTMLElement): HTMLElement[] => {
-		return root.querySelectorAll('script').filter(script => {
+		return root.querySelectorAll('script').filter((script) => {
 			if (!script.attributes.src.startsWith('/')) {
 				return false;
-			};
+			}
 
 			const { key } = parseScriptSrc(script);
 			return keys.has(key);
@@ -202,7 +211,7 @@ function createTransformPlugin(
 			src: `${base}${script.attributes.src}`,
 			integrity: libs[key].versions[version].sri,
 			crossorigin: 'anonymous',
-			referrerpolicy: 'no-referrer'
+			referrerpolicy: 'no-referrer',
 		};
 	};
 
@@ -227,8 +236,8 @@ function createTransformPlugin(
 					updateAssets(root, options, sketch);
 
 					return root.toString();
-				}
-			}
+				},
+			},
 		};
 	};
 }
@@ -240,9 +249,13 @@ function updateTitle(root: HTMLElement, data: SketchData) {
 	if (!title) return;
 
 	title.set_content(name.charAt(0).toLocaleUpperCase() + name.slice(1));
-};
+}
 
-function updateAssets(root: HTMLElement, options: BuildSketchesOptions, data: SketchData) {
+function updateAssets(
+	root: HTMLElement,
+	options: BuildSketchesOptions,
+	data: SketchData
+) {
 	const { base, subDirStatic, subDirViews } = options;
 	const selector = `[href], [src]`;
 	const assets = root.querySelectorAll(selector);

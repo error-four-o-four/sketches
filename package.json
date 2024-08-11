@@ -8,6 +8,10 @@
     "cli"
   ],
   "scripts": {
+    "format": "prettier --parser typescript \"*.((m)?js|ts?(x))\"",
+    "format:fix": "npm run format -- --write",
+    "format:all": "prettier --parser typescript \"(sketches|templates)/**/*.((m)?js|ts?(x))\"",
+    "format:all:fix": "npm run format:all -- --write",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
@@ -21,6 +25,7 @@
     "@types/p5": "^1.7.6",
     "esbuild": "^0.23.0",
     "node-html-parser": "^6.1.13",
+    "prettier": "^3.3.3",
     "vite": "^5.3.5"
   }
 }

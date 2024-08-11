@@ -1,4 +1,4 @@
-import { defineConfig, type UserConfigFn } from 'vite';;
+import { defineConfig, type UserConfigFn } from 'vite';
 
 import {
 	customLogger,
@@ -8,13 +8,13 @@ import {
 	publicDirPath,
 	transformOptions,
 	bundleOptions,
-	assetsOptions
+	assetsOptions,
 } from './vite.options.js';
 
 import {
 	buildSketches,
 	copyStaticAssets,
-	transformIndexHtml
+	transformIndexHtml,
 } from './vite.plugin.js';
 
 export default <UserConfigFn>function ({ mode, command }) {
@@ -23,12 +23,10 @@ export default <UserConfigFn>function ({ mode, command }) {
 		return defineConfig({
 			root,
 			publicDir: publicDirPath,
-			plugins: [
-				transformIndexHtml(transformOptions),
-			],
+			plugins: [transformIndexHtml(transformOptions)],
 			server: {
-				open: true
-			}
+				open: true,
+			},
 		});
 	}
 
@@ -62,9 +60,9 @@ export default <UserConfigFn>function ({ mode, command }) {
 				open: true,
 				proxy: {
 					[`/${base}`]: {
-						target: "http://localhost:4173",
+						target: 'http://localhost:4173',
 						changeOrigin: true,
-						rewrite: (path) => path.replace(new RegExp('^\/' + base), ""),
+						rewrite: (path) => path.replace(new RegExp('^/' + base), ''),
 					},
 				},
 			},

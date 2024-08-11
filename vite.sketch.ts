@@ -1,16 +1,17 @@
-import { defineConfig } from "vite";
-import type { BuildOptions, UserConfigFn } from "vite";
+import { defineConfig } from 'vite';
+import type { BuildOptions, UserConfigFn } from 'vite';
 
 import { publicDirPath } from './vite.options.js';
 
 export default <UserConfigFn>function ({ mode }) {
-	const rollupOptions: BuildOptions['rollupOptions'] = mode !== 'development'
-		? {
-			output: {
-				format: 'iife',
-			}
-		}
-		: {};
+	const rollupOptions: BuildOptions['rollupOptions'] =
+		mode !== 'development'
+			? {
+					output: {
+						format: 'iife',
+					},
+				}
+			: {};
 
 	return defineConfig({
 		publicDir: publicDirPath,
@@ -21,7 +22,7 @@ export default <UserConfigFn>function ({ mode }) {
 			rollupOptions,
 		},
 		server: {
-			open: true
-		}
+			open: true,
+		},
 	});
 };

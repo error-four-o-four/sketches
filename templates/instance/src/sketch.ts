@@ -1,4 +1,4 @@
-import { P5 } from "./types";
+import { P5 } from './types';
 
 export const sketch = (p: P5) => {
 	p.setup = function () {
