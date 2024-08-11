@@ -4,7 +4,7 @@
 		"**/vite.config.ts",
 		"vite.config.ts",
 		"vite.options.ts",
-		"vite.plugin.ts",
+		"vite.plugins.ts",
 		"vite.sketch.ts",
 	]
 }

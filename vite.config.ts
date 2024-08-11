@@ -15,7 +15,7 @@ import {
 	buildSketches,
 	copyStaticAssets,
 	transformIndexHtml,
-} from './vite.plugin.js';
+} from './vite.plugins.js';
 
 export default <UserConfigFn>function ({ mode, command }) {
 	// vite dev

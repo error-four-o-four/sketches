@@ -3,24 +3,23 @@
   "type": "module",
   "version": "0.0.1",
   "workspaces": [
+    "packages/*",
     "sketches/*",
-    "templates/*",
-    "cli"
+    "templates/*"
   ],
   "scripts": {
-    "format": "prettier --parser typescript \"*.((m)?js|ts?(x))\"",
+    "format": "prettier --parser typescript \"((packages|sketches|templates)/**/*.ts|*.ts)\"",
     "format:fix": "npm run format -- --write",
-    "format:all": "prettier --parser typescript \"(sketches|templates)/**/*.((m)?js|ts?(x))\"",
-    "format:all:fix": "npm run format:all -- --write",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "bin": {
-    "create": "cli/dist/create.cjs",
-    "fetch": "cli/dist/fetch.cjs"
+    "create": "./cli/dist/create.cjs",
+    "fetch": "./cli/dist/fetch.cjs"
   },
   "devDependencies": {
+    "@internal/cdn": "^0.0.1",
     "@types/node": "^22.1.0",
     "@types/p5": "^1.7.6",
     "esbuild": "^0.23.0",

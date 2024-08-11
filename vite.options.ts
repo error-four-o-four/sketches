@@ -11,7 +11,7 @@ import type {
 	TransformOptions,
 	BuildSketchesOptions,
 	StaticAssetsOptions,
-} from './vite.plugin.js';
+} from './vite.plugins.js';
 
 const input = ['2024-08-05-foo'] as const;
 
@@ -51,6 +51,7 @@ export const transformOptions: TransformOptions = {
 
 export const bundleOptions: BuildSketchesOptions = {
 	outPath: outSubDirPath,
+	publicPath: publicDirPath,
 	subDirStatic: subDirnameStatic,
 	subDirViews: subDirnameViews,
 	base,

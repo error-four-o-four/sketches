@@ -1,0 +1,21 @@
+{
+  "name": "@internal/cdn",
+  "type": "module",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "pkgroll --watch",
+    "build": "pkgroll --clean-dist --minify"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "devDependencies": {
+    "pkgroll": "^2.4.2"
+  }
+}

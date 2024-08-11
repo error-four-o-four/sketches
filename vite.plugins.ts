@@ -9,8 +9,8 @@ import { build as esbuild } from 'esbuild';
 import { parse } from 'node-html-parser';
 import type { HTMLElement } from 'node-html-parser';
 
-/** todo install as pkg */
-import type { LibraryData, Semver } from './cli/src/fetch.js';
+import { LibHandler } from '@internal/cdn';
+import type { LibraryData } from '@internal/cdn';
 
 export const customLogger = createLogger();
 
@@ -117,6 +117,7 @@ export function copyStaticAssets({
 
 export type BuildSketchesOptions = {
 	outPath: string;
+	publicPath: string;
 	subDirStatic: string;
 	subDirViews: string;
 	base: string;
@@ -155,65 +156,10 @@ export function buildSketches(options: BuildSketchesOptions): Plugin {
 	};
 }
 
-type ScriptSrcParsed = {
-	key: string;
-	version: Semver;
-};
-
-type ScriptAttributes = {
-	src: string;
-	integrity: string;
-	crossorigin: string;
-	referrerpolicy: string;
-};
-
 function createTransformPlugin(
 	options: BuildSketchesOptions
 ): (sketch: SketchData) => Plugin {
-	const { libs } = options;
-	const base = 'https://cdnjs.cloudflare.com/ajax/libs';
-	const keys = new Set(Object.keys(libs));
-
-	const parseScriptSrc = (script: HTMLElement): ScriptSrcParsed => {
-		const [key, version] = script.attributes.src.slice(1).split('/') as [
-			string,
-			Semver,
-		];
-
-		return {
-			key,
-			version,
-		};
-	};
-
-	const getScripts = (root: HTMLElement): HTMLElement[] => {
-		return root.querySelectorAll('script').filter((script) => {
-			if (!script.attributes.src.startsWith('/')) {
-				return false;
-			}
-
-			const { key } = parseScriptSrc(script);
-			return keys.has(key);
-		});
-	};
-
-	const getScriptAttributes = (script: HTMLElement): ScriptAttributes => {
-		const { key, version } = parseScriptSrc(script);
-
-		// <script
-		// 	src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"
-		// 	integrity="sha512-d6sc8kbZEtA2LwB9m/ck0FhvyUwVfdmvTeyJRprmj7Wg9wRFtHDIpr6qk4g/y3Ix3O9I6KHIv6SGu9f7RaP1Gw=="
-		// 	crossorigin="anonymous"
-		// 	referrerpolicy="no-referrer"
-		// ></script>
-
-		return {
-			src: `${base}${script.attributes.src}`,
-			integrity: libs[key].versions[version].sri,
-			crossorigin: 'anonymous',
-			referrerpolicy: 'no-referrer',
-		};
-	};
+	const libs = new LibHandler(options.publicPath);
 
 	return (sketch): Plugin => {
 		return {
@@ -227,10 +173,16 @@ function createTransformPlugin(
 					const root = parse(html);
 					updateTitle(root, sketch);
 
-					const scripts = getScripts(root);
+					const scripts = root
+						.querySelectorAll('script')
+						.filter((script) => script.attributes.src.startsWith('/'));
+
 					for (const script of scripts) {
-						const attributes = getScriptAttributes(script);
-						script.setAttributes(attributes);
+						const lib = libs.get(script.attributes.src);
+
+						if (!lib) continue;
+
+						updateLibrary(script, lib);
 					}
 
 					updateAssets(root, options, sketch);
@@ -249,6 +201,22 @@ function updateTitle(root: HTMLElement, data: SketchData) {
 	if (!title) return;
 
 	title.set_content(name.charAt(0).toLocaleUpperCase() + name.slice(1));
+}
+
+function updateLibrary(script: HTMLElement, lib: LibraryData) {
+	const { url, sri } = lib;
+
+	script.setAttribute('src', url);
+	script.setAttribute('integrity', sri);
+	script.setAttribute('crossorigin', 'anonymous');
+	script.setAttribute('referrerpolicy', 'no-referrer');
+
+	// <script
+	// 	src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"
+	// 	integrity="sha512-d6sc8kbZEtA2LwB9m/ck0FhvyUwVfdmvTeyJRprmj7Wg9wRFtHDIpr6qk4g/y3Ix3O9I6KHIv6SGu9f7RaP1Gw=="
+	// 	crossorigin="anonymous"
+	// 	referrerpolicy="no-referrer"
+	// ></script>
 }
 
 function updateAssets(
