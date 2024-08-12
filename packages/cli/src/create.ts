@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
 import np from 'node:path';
-import nfs, { promises as nfp } from 'node:fs';
-import { parseArgs, type ParseArgsConfig } from 'node:util';
+import nfs from 'node:fs';
+import nfp from 'node:fs/promises';
+import ncp from 'node:child_process';
+import { parseArgs, promisify, type ParseArgsConfig } from 'node:util';
 
 import { rxIsoDate, logError, parseJson, writeJson } from '@internal/utils';
 
@@ -37,27 +39,28 @@ const dirname = {
 		allowPositionals: true,
 	});
 
-	const { name, date, target } = getTargetPath(parsed);
+	const { folder, name, date, path } = getSketchData(parsed);
 
 	const sourceValue = parsed.values.src ?? parsed.values.source;
 	const source = sourceValue
 		? getSourcePath(sourceValue)
 		: getTemplatePath(parsed);
 
-	await copySourceFiles(source, target);
-	updatePackageJson(target, name);
-	updateIndexHtml(target, name, date);
+	await copySourceFiles(source, path);
+	await updatePackageJson(path, name);
+	updateIndexHtml(path, name, date);
 
-	console.log('✅ Done');
+	console.log('Done ✓');
 })();
 
-function getTargetPath({ values, positionals }: ReturnType<typeof parseArgs>): {
+function getSketchData({ values, positionals }: ReturnType<typeof parseArgs>): {
+	folder: string;
 	name: string;
 	date: string;
-	target: string;
+	path: string;
 } {
-	const input =
-		positionals[0] === process.argv[2] ? positionals[0] : values.name;
+	const input = positionals[0] === process.argv[2]
+		? positionals[0] : values.name;
 
 	if (!input) {
 		console.log('Please provide a name to create a new project');
@@ -91,20 +94,27 @@ function getTargetPath({ values, positionals }: ReturnType<typeof parseArgs>): {
 			folder = `${date}-${name}`;
 		}
 
+		if (getPackageNames().includes(name)) {
+			console.log('Package %o already exists', name);
+			process.exit(1);
+		}
+
 		if (!getFolders(dirname.sketches).includes(folder)) {
 			return {
+				folder,
 				name,
 				date,
-				target: np.resolve('./', dirname.sketches, folder),
+				path: np.resolve('./', dirname.sketches, folder),
 			};
 		}
 
-		console.log('project %o already exists', folder);
+		console.log('Folder %o already exists', folder);
 		process.exit(1);
 	}
 
-	const arg =
-		['--name', '-n'].find((val) => process.argv.includes(val)) ?? 'name';
+	const arg = ['--name', '-n']
+		.find((val) => process.argv.includes(val)) ?? 'name';
+
 	console.log('Invalid value for argument %o', arg);
 	process.exit(1);
 }
@@ -184,41 +194,34 @@ async function copySourceFiles(from: string, to: string) {
 	}
 }
 
-function updatePackageJson(absDirPath: string, name: string) {
-	const names = getPackageNames();
+async function updatePackageJson(absDirPath: string, name: string) {
 	const path = np.join(absDirPath, 'package.json');
-	const pkg = parseJson(path);
-
-	/** @todo it could also be possible to get and set <root><package.json>.workspaces explicitely */
-	if (names.includes(name)) {
-		let i = 1;
-		let fallback = `${name}${i}`;
-
-		while (names.includes(fallback)) {
-			i += 1;
-			fallback = `${name}${i}`;
-		}
-
-		console.warn(
-			'Project name %o is already in use. Renaming Project to %o',
-			name,
-			fallback
-		);
-
-		console.warn('Consider to rename the project manually');
-		name = fallback;
-	}
-
-	const data = Object.assign(pkg, { name });
+	const json = parseJson(path);
+	const data = Object.assign(json, { name });
 
 	writeJson(path, data);
+
+	await new Promise<void>((resolve, reject) => {
+		ncp.exec(`npm i -w ${absDirPath}`, (error) => {
+			if (error) {
+				reject(error.message);
+			}
+
+			resolve();
+		});
+	}).catch(async reason => {
+		await nfp.rm(absDirPath, { recursive: true });
+		console.warn(reason);
+		process.exit(1);
+	});
 }
 
 function getPackageNames() {
 	return getFolders(dirname.sketches)
 		.map((dir) => np.resolve('./', dirname.sketches, dir, 'package.json'))
 		.filter((path) => nfs.existsSync(path))
-		.map((path) => parseJson(path).name);
+		.map((path) => parseJson(path).name)
+		.filter(value => typeof value === 'string');
 }
 
 function updateIndexHtml(absDirPath: string, name: string, date: string) {
