@@ -20,6 +20,7 @@
     "rollup-plugin-node-externals": "^7.1.2"
   },
   "dependencies": {
-    "@internal/cdn": "file:../cdn"
+    "@internal/cdn": "file:../cdn",
+    "@internal/utils": "file:../utils"
   }
 }

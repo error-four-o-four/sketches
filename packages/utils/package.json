@@ -1,0 +1,25 @@
+{
+  "name": "@internal/utils",
+  "type": "module",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "format": "prettier --parser typescript \"src/**/*.ts\"",
+    "format:fix": "npm run format -- --write",
+    "dev": "pkgroll --watch",
+    "build": "pkgroll --clean-dist --minify"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "devDependencies": {
+    "@internal/cli": "^0.0.1",
+    "pkgroll": "^2.4.2",
+    "prettier": "^3.3.3"
+  }
+}
