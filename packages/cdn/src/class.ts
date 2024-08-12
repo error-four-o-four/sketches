@@ -1,9 +1,9 @@
 import np from 'node:path';
 import nfs from 'node:fs';
 
-import { filename } from './config.js';
+import { parseJson, writeJson, logError } from '@internal/utils';
 
-import { parseJson, writeJson, logError } from './utils.js';
+import { filename } from './config.js';
 
 import {
 	createLibraryKeys,

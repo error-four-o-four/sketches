@@ -3,17 +3,13 @@
 import np from 'node:path';
 import nfs, { promises as nfp } from 'node:fs';
 import { parseArgs, type ParseArgsConfig } from 'node:util';
-import { logError, parseJson, writeJson } from '@internal/cdn';
+
+import { rxIsoDate, logError, parseJson, writeJson } from '@internal/utils';
 
 const dirname = {
 	sketches: 'sketches',
 	templates: 'templates',
 } as const;
-
-const regex = {
-	isoDate: /^\d{4}-\d{1,2}-\d{1,2}/,
-	targetFolder: /^\d{4}-\d{1,2}-\d{1,2}-\w+/,
-};
 
 (async () => {
 	const options: ParseArgsConfig['options'] = {
@@ -41,7 +37,7 @@ const regex = {
 		allowPositionals: true,
 	});
 
-	const target = getTargetPath(parsed);
+	const { name, date, target } = getTargetPath(parsed);
 
 	const sourceValue = parsed.values.src ?? parsed.values.source;
 	const source = sourceValue
@@ -49,16 +45,21 @@ const regex = {
 		: getTemplatePath(parsed);
 
 	await copySourceFiles(source, target);
-	updatePackageJson(target);
+	updatePackageJson(target, name);
+	updateIndexHtml(target, name, date);
 
 	console.log('✅ Done');
 })();
 
-function getTargetPath({ values, positionals }: ReturnType<typeof parseArgs>) {
-	const name =
+function getTargetPath({ values, positionals }: ReturnType<typeof parseArgs>): {
+	name: string;
+	date: string;
+	target: string;
+} {
+	const input =
 		positionals[0] === process.argv[2] ? positionals[0] : values.name;
 
-	if (!name) {
+	if (!input) {
 		console.log('Please provide a name to create a new project');
 		console.log(
 			'e.g. %o, %o or %o',
@@ -70,19 +71,35 @@ function getTargetPath({ values, positionals }: ReturnType<typeof parseArgs>) {
 	}
 
 	if (values.name && positionals[0] === process.argv[2]) {
-		console.log('Too much arguments were passed. Using %o', name);
+		console.log('Too much arguments were passed. Using %o', input);
 	}
 
-	if (typeof name === 'string') {
-		const target = regex.targetFolder.test(name)
-			? name
-			: `${new Date().toISOString().split('T')[0]}-${name}`;
+	if (typeof input === 'string') {
+		const match = input.match(rxIsoDate);
 
-		if (!getFolders(dirname.sketches).includes(target)) {
-			return np.resolve('./', dirname.sketches, target);
+		let name: string;
+		let date: string;
+		let folder: string;
+
+		if (match) {
+			date = match[0];
+			name = input.replace(date, '').slice(1);
+			folder = input;
+		} else {
+			date = new Date().toISOString().split('T')[0];
+			name = input;
+			folder = `${date}-${name}`;
 		}
 
-		console.log('project %o already exists', target);
+		if (!getFolders(dirname.sketches).includes(folder)) {
+			return {
+				name,
+				date,
+				target: np.resolve('./', dirname.sketches, folder),
+			};
+		}
+
+		console.log('project %o already exists', folder);
 		process.exit(1);
 	}
 
@@ -167,12 +184,10 @@ async function copySourceFiles(from: string, to: string) {
 	}
 }
 
-function updatePackageJson(absDirPath: string) {
+function updatePackageJson(absDirPath: string, name: string) {
+	const names = getPackageNames();
 	const path = np.join(absDirPath, 'package.json');
 	const pkg = parseJson(path);
-
-	const names = getPackageNames();
-	let name = np.basename(absDirPath).replace(regex.isoDate, '').slice(1);
 
 	/** @todo it could also be possible to get and set <root><package.json>.workspaces explicitely */
 	if (names.includes(name)) {
@@ -189,6 +204,7 @@ function updatePackageJson(absDirPath: string) {
 			name,
 			fallback
 		);
+
 		console.warn('Consider to rename the project manually');
 		name = fallback;
 	}
@@ -203,6 +219,20 @@ function getPackageNames() {
 		.map((dir) => np.resolve('./', dirname.sketches, dir, 'package.json'))
 		.filter((path) => nfs.existsSync(path))
 		.map((path) => parseJson(path).name);
+}
+
+function updateIndexHtml(absDirPath: string, name: string, date: string) {
+	const path = np.join(absDirPath, 'index.html');
+
+	let html = nfs.existsSync(path) ? nfs.readFileSync(path, 'utf-8') : null;
+
+	if (!html) {
+		console.warn('Could not read %o', path);
+		process.exit(1);
+	}
+
+	html = html.replace(/<title>.*<\/title>/, `<title>${name} - ${date}</title>`);
+	nfs.writeFileSync(path, html);
 }
 
 type ReadOptions = Parameters<typeof nfp.readdir>[1];

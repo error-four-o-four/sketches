@@ -170,8 +170,6 @@ function createTransformPlugin(
 					// console.log('\nTransforming %o ...', sketch.name);
 
 					const root = parse(html);
-					updateTitle(root, sketch);
-
 					const scripts = root
 						.querySelectorAll('script')
 						.filter((script) => script.attributes.src.startsWith('/'));
@@ -191,15 +189,6 @@ function createTransformPlugin(
 			},
 		};
 	};
-}
-
-function updateTitle(root: HTMLElement, data: SketchData) {
-	const title = root.querySelector('title');
-	const { name } = data;
-
-	if (!title) return;
-
-	title.set_content(name.charAt(0).toLocaleUpperCase() + name.slice(1));
 }
 
 function updateLibrary(script: HTMLElement, lib: LibraryData) {

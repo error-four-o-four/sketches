@@ -31,8 +31,4 @@ declare class LibHandler {
     get(src: string): LibraryDataItem | null;
 }
 
-declare function parseJson(path: string): any;
-declare function writeJson(path: string, data: unknown): void;
-declare function logError(error: unknown): void;
-
-export { LibHandler, type Libraries, type LibraryDataItem as LibraryData, logError, parseJson, writeJson };
+export { LibHandler, type Libraries, type LibraryDataItem as LibraryData };

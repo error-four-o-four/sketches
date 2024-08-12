@@ -1,5 +1,6 @@
+import { logError } from '@internal/utils';
+
 import { fields, url } from './config.js';
-import { fetchRequest } from './utils.js';
 
 import type {
 	Libraries,
@@ -51,6 +52,17 @@ export async function fetchLibraryData<T>(
 	}
 
 	return json as T;
+}
+
+export async function fetchRequest<T>(request: string) {
+	try {
+		const data = await fetch(request);
+		return (await data.json()) as T;
+	} catch (error) {
+		logError(error);
+	}
+
+	return null;
 }
 
 export function parseFetchedData(
