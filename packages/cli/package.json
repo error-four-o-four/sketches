@@ -16,8 +16,7 @@
   },
   "devDependencies": {
     "pkgroll": "^2.4.2",
-    "prettier": "^3.3.3",
-    "rollup-plugin-node-externals": "^7.1.2"
+    "prettier": "^3.3.3"
   },
   "dependencies": {
     "@internal/cdn": "file:../cdn",
