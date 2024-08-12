@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+		<link rel="stylesheet" href="/static/global.css">
+		<title>Fusilli 2024-07-23</title>
+	</head>
+	<body>
+		<main>
+			<div id="wrapper"></div>
+			<div id="content">
+				<h1>Fusilli</h1>
+				<h4>2024-07-23</h4>
+				<p>Click on canvas to regenerate.</p>
+
+				<pre>
+type EdgeData = {
+	lane: 'B' | 'L' | 'F' | 'R';
+	color: 'hsl(hue, sat, lgt)' | 'rgb(r, g, b)';
+}
+
+type TileData = {
+	coords: [number, number];
+	hasIntersections: boolean;
+	edges: Record&lt;'N' | 'E' | 'S' | 'W', ParsedEdgeData&gt;&semi;
+};</pre>
+				<div class="col-2">
+					<div>
+						<img src="./assets/tiles.png">
+					</div>
+					<div>
+						<img src="./assets/lanes.png">
+					</div>
+				</div>
+				<div>
+					<img src="./assets/output32x32a.png">
+					<img src="./assets/output32x32b.png">
+					<img src="./assets/output64x64.png">
+					<img src="./assets/output96x96.png">
+					<img src="./assets/output256x256a.png">
+					<img src="./assets/output256x256b.png">
+					<img src="./assets/output256x256c.png">
+				</div>
+			</div>
+		</main>
+		<script src="/p5.js/1.9.4/p5.min.js"></script>
+		<script type="module">
+			import './assets/style.css'
+			import { sketch } from './src/sketch.ts'
+			new window.p5(sketch, document.getElementById('wrapper'));
+		</script>
+	</body>
+</html>

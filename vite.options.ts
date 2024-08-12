@@ -11,7 +11,7 @@ import type {
 	StaticAssetsOptions,
 } from './vite.plugins.js';
 
-const input = ['2024-08-05-foo'] as const;
+const input = ['2024-07-23-fusilli'] as const;
 
 const project = fileURLToPath(new URL('./', import.meta.url));
 
