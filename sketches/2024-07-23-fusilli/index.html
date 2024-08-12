@@ -16,15 +16,15 @@
 				<p>Click on canvas to regenerate.</p>
 
 				<pre>
-type EdgeData = {
-	lane: 'B' | 'L' | 'F' | 'R';
-	color: 'hsl(hue, sat, lgt)' | 'rgb(r, g, b)';
-}
-
 type TileData = {
 	coords: [number, number];
 	hasIntersections: boolean;
-	edges: Record&lt;'N' | 'E' | 'S' | 'W', ParsedEdgeData&gt;&semi;
+	edges: Record&lt;'N' | 'E' | 'S' | 'W', EdgeData&gt;&semi;
+};
+
+type EdgeData = {
+	lane: 'B' | 'L' | 'F' | 'R';
+	color: 'hsl(hue, sat, lgt)' | 'rgb(r, g, b)';
 };</pre>
 				<div class="col-2">
 					<div>
