@@ -8,8 +8,9 @@
     "templates/*"
   ],
   "scripts": {
-    "format": "prettier --parser typescript \"((packages|sketches|templates)/**/*.ts|*.ts)\"",
+    "format": "prettier --parser typescript \"((sketches|templates)/**/*.ts|*.ts)\"",
     "format:fix": "npm run format -- --write",
+    "format:fix:all": "npm run format:fix && npm run format:fix -ws --if-present",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

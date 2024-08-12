@@ -5,6 +5,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "format": "prettier --parser typescript \"src/**/*.ts\"",
+    "format:fix": "npm run format -- --write",
     "dev": "pkgroll --watch",
     "build": "pkgroll --clean-dist --minify"
   },
@@ -16,6 +18,8 @@
     }
   },
   "devDependencies": {
-    "pkgroll": "^2.4.2"
+    "@internal/cli": "^0.0.1",
+    "pkgroll": "^2.4.2",
+    "prettier": "^3.3.3"
   }
 }

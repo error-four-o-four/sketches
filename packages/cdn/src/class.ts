@@ -6,12 +6,17 @@ import { filename } from './config.js';
 import { parseJson, writeJson, logError } from './utils.js';
 
 import {
-	createLibraryData,
 	createLibraryKeys,
-	updateLibraryData,
+	fetchLibraryData,
+	parseFetchedData,
 } from './helpers.js';
 
-import type { Libraries, LibrarySrc } from './types.js';
+import type {
+	Libraries,
+	LibrarySrc,
+	InitialJson,
+	VersionJson,
+} from './types.js';
 
 export class LibHandler {
 	private path: string;
@@ -24,6 +29,77 @@ export class LibHandler {
 		this.file = np.join(path, filename);
 		this.data = parseJson(this.file) ?? {};
 		this.keys = createLibraryKeys(this.data);
+	}
+
+	private async createLibraryData(name: string) {
+		const fetched = await fetchLibraryData<InitialJson>(name, null);
+
+		this.data[name] = {
+			latest: fetched.version,
+			filename: fetched.filename,
+			versions: {
+				[fetched.version]: parseFetchedData(fetched, fetched.version),
+			},
+			updatedAt: new Date().toISOString(),
+		};
+	}
+
+	private async updateLibraryData(name: string, version: string | null) {
+		const lib = this.data[name];
+		const updatedAt = new Date(lib.updatedAt).valueOf();
+		const outdated = Date.now() - updatedAt > 1000 * 60 * 60 * 24 * 31;
+
+		if (!version && !outdated && lib.latest) {
+			console.log(
+				'Latest version %o of %o has already been fetched',
+				lib.latest,
+				name
+			);
+			process.exit(0);
+		}
+
+		if (!version && outdated) {
+			const fetched = await fetchLibraryData<InitialJson>(name, null);
+
+			if (fetched.version === lib.latest && fetched.version in lib.versions) {
+				console.log(
+					'Latest version %o of %o has already been fetched',
+					lib.latest,
+					name
+				);
+				process.exit(0);
+			}
+
+			/** @todo test! */
+			lib.latest = fetched.version;
+			lib.versions[fetched.version] = parseFetchedData(
+				fetched,
+				fetched.version
+			);
+			lib.updatedAt = new Date().toISOString();
+			this.data[name] = lib;
+			return;
+		}
+
+		if (version) {
+			const versions = Object.keys(lib.versions);
+
+			if (versions.includes(version)) {
+				console.log('Version %o of %o has already been fetched', version, name);
+				process.exit(0);
+			}
+
+			const fetched = await fetchLibraryData<VersionJson>(name, version);
+			this.data[name].versions[version] = parseFetchedData(
+				fetched,
+				version,
+				lib.filename
+			);
+			return;
+		}
+
+		console.log('Something went wrong ...');
+		process.exit(1);
 	}
 
 	private async download(name: string, version: string, filename: string) {
@@ -54,17 +130,11 @@ export class LibHandler {
 
 	public async fetch(name: string, version: string | null) {
 		if (!Object.hasOwn(this.data, name)) {
-			const result = await createLibraryData(name);
-			if (result) {
-				this.data[name] = result;
-			}
+			await this.createLibraryData(name);
 		}
 
 		if (version) {
-			const result = await updateLibraryData(this.data[name], name, version);
-			if (result) {
-				this.data[name] = result;
-			}
+			await this.updateLibraryData(name, version);
 		}
 
 		writeJson(this.file, this.data);

@@ -5,6 +5,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "format": "prettier --parser typescript \"src/**/*.ts\"",
+    "format:fix": "npm run format -- --write",
     "dev": "pkgroll --watch",
     "build": "tsc --noEmit && pkgroll --minify"
   },
@@ -14,6 +16,7 @@
   },
   "devDependencies": {
     "pkgroll": "^2.4.2",
+    "prettier": "^3.3.3",
     "rollup-plugin-node-externals": "^7.1.2"
   },
   "dependencies": {

@@ -3,7 +3,6 @@ import { fetchRequest } from './utils.js';
 
 import type {
 	Libraries,
-	LibraryData,
 	LibraryDataItem,
 	InitialResponse,
 	InitialJson,
@@ -29,79 +28,10 @@ export function createLibraryKeys(data: Libraries) {
 	return keys;
 }
 
-export async function createLibraryData(
-	name: string
-): Promise<LibraryData | null> {
-	const fetched = await fetchLibraryData<InitialJson>(name, null);
-
-	return {
-		latest: fetched.version,
-		filename: fetched.filename,
-		versions: {
-			[fetched.version]: parseFetchedData(fetched, fetched.version),
-		},
-		updatedAt: new Date().toISOString(),
-	};
-}
-
-export async function updateLibraryData(
-	data: LibraryData,
+export async function fetchLibraryData<T>(
 	name: string,
 	version: string | null
-): Promise<LibraryData | null> {
-	const updatedAt = new Date(data.updatedAt).valueOf();
-	const outdated = Date.now() - updatedAt > 1000 * 60 * 60 * 24 * 31;
-	// const outdated = true;
-	// console.log(updatedAt);
-	// console.log(Date.now());
-	// console.log(outdated);
-
-	if (!version && !outdated && data.latest) {
-		console.log(
-			'Latest version %o of %o has already been fetched',
-			data.latest,
-			name
-		);
-		return null;
-	}
-
-	if (!version && outdated) {
-		const fetched = await fetchLibraryData<InitialJson>(name, null);
-
-		if (fetched.version === data.latest && fetched.version in data.versions) {
-			console.log(
-				'Latest version %o of %o has already been fetched',
-				data.latest,
-				name
-			);
-			return null;
-		}
-
-		/** @todo test! */
-		data.latest = fetched.version;
-		data.versions[fetched.version] = parseFetchedData(fetched, fetched.version);
-		data.updatedAt = new Date().toISOString();
-		return data;
-	}
-
-	if (version) {
-		const versions = Object.keys(data.versions);
-
-		if (versions.includes(version)) {
-			console.log('Version %o of %o has already been fetched', version, name);
-			return null;
-		}
-
-		const fetched = await fetchLibraryData<VersionJson>(name, version);
-		data.versions[version] = parseFetchedData(fetched, version, data.filename);
-		return data;
-	}
-
-	console.log('Something went wrong ...');
-	process.exit(1);
-}
-
-async function fetchLibraryData<T>(name: string, version: string | null) {
+) {
 	const base = version ? `${name}/${version}` : name;
 	const query = version ? fields.version : fields.initial;
 	const request = `${url.api}/${base}?fields=${query.join(',')}`;
@@ -123,7 +53,7 @@ async function fetchLibraryData<T>(name: string, version: string | null) {
 	return json as T;
 }
 
-function parseFetchedData(
+export function parseFetchedData(
 	data: InitialJson | VersionJson,
 	version: string,
 	filename?: string
