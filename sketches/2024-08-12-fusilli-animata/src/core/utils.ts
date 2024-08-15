@@ -10,7 +10,7 @@ import type {
 } from "../types.js";
 
 import {
-	GRID,
+	TILES_AMOUNT,
 	EDGES,
 	LANES
 } from "../config.js";
@@ -160,14 +160,6 @@ export function assertNonNullable(
 
 // #####
 
-const { SIZE } = GRID;
-
-const matrixNext = [
-	[0, 1],
-	[-1, 0],
-	[0, -1],
-	[1, 0]
-];
 
 export function getNextTile(
 	tiles: TilesMap,
@@ -175,13 +167,20 @@ export function getNextTile(
 	row: number,
 	nextEdge: Edge,
 ): TileEntry | undefined {
+	const matrix = [
+		[0, 1],
+		[-1, 0],
+		[0, -1],
+		[1, 0]
+	];
+
 	const index = EDGES.indexOf(nextEdge);
 
 	// unecessary ??
 	if (index < 0) return;
 
-	col += matrixNext[index][0];
-	row += matrixNext[index][1];
+	col += matrix[index][0];
+	row += matrix[index][1];
 
 	if (isOutOfBounds(col, row)) return;
 
@@ -192,12 +191,6 @@ export function getNextTile(
 }
 
 
-const matrixPrev = [
-	[0, -1],
-	[1, 0],
-	[0, 1],
-	[-1, 0]
-];
 
 export function getPrevTile(
 	tiles: TilesMap,
@@ -205,12 +198,19 @@ export function getPrevTile(
 	row: number,
 	edge: Edge
 ): TileEntry | undefined {
+	const matrix = [
+		[0, -1],
+		[1, 0],
+		[0, 1],
+		[-1, 0]
+	];
+
 	const index = EDGES.indexOf(edge);
 
 	if (index < 0) return;
 
-	col += matrixPrev[index][0];
-	row += matrixPrev[index][1];
+	col += matrix[index][0];
+	row += matrix[index][1];
 
 	if (isOutOfBounds(col, row)) return;
 
@@ -221,7 +221,7 @@ export function getPrevTile(
 }
 
 function isOutOfBounds(col: number, row: number) {
-	return col < 0 || row < 0 || col >= SIZE || row >= SIZE;
+	return col < 0 || row < 0 || col >= TILES_AMOUNT || row >= TILES_AMOUNT;
 }
 
 // #####

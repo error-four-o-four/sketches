@@ -4,10 +4,8 @@ import type {
 	NodeHash,
 } from "../types";
 
-import { GRID, EDGES } from "../config";
+import { TILES_AMOUNT, EDGES } from "../config";
 import * as util from './utils.js';
-
-const { SIZE } = GRID;
 
 export class NodesObserver {
 	occupied: Set<NodeHash>;
@@ -30,14 +28,14 @@ export class NodesObserver {
 
 		if (this.edge === 0) {
 			this.col += 1;
-			this.col %= SIZE;
+			this.col %= TILES_AMOUNT;
 		}
 
 		if (this.edge === 0 && this.col === 0) {
 			this.row += 1;
 		}
 
-		if (this.row === SIZE) {
+		if (this.row === TILES_AMOUNT) {
 			this.done = true;
 		}
 	}

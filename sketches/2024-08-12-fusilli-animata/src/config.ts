@@ -1,17 +1,18 @@
 import type { TileType } from "./types.js";
 
-export const GRID = {
-	SIZE: 24,
+export const CANVAS_SIZE = Math.min(window.innerWidth, window.innerHeight);
+// export const CANVAS_SIZE = 720;
 
-	// COL: 0
-	// ROW: 0
-};
+// amount per edge
+export const TILES_AMOUNT = 16;
+// COL: 0
+// ROW: 0
 
-// const CANVAS_SIZE = Math.min(window.innerWidth, window.innerHeight);
-const CANVAS_SIZE = 640;
+export const MIN_LIFETIME = 180;
+export const MAX_LIFETIME = 300;
+export const FADE_TRANSITION_LGTH = 16;
 
-// const SIDE_LGTH = Math.floor(Math.min(window.innerWidth, window.innerHeight) / (0.5 * GRID.SIZE));
-const SIDE_LGTH = Math.floor(CANVAS_SIZE / GRID.SIZE);
+const SIDE_LGTH = Math.floor(CANVAS_SIZE / TILES_AMOUNT);
 
 export const TILE = {
 	SIDE_LGTH: SIDE_LGTH,

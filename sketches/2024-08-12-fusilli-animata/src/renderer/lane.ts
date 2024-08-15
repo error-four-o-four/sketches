@@ -186,7 +186,7 @@ function laneAnglesToAnglesArray(array: [number, number, number, number]) {
 
 // access precalculated coords
 
-export const laneRenderer: Record<
+export const LaneRenderer: Record<
 	Lane,
 	(
 		p: P5,
