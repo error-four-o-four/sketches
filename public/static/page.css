@@ -1,0 +1,58 @@
+main {
+	width: 100%;
+	margin: 0 auto;
+	padding: 0;
+}
+
+@media (min-width: 541px) {
+	main {
+		width: 540px;
+	}
+}
+
+@media (min-width: 768px) {
+	main {
+		width: 720px;
+	}
+}
+
+#head {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+@media (orientation: landscape) {
+	#head {
+		height: 100vh;
+	}
+}
+
+@media (orientation: portrait) {
+	#head {
+		width: 100%;
+		aspect-ratio: 1;
+	}
+}
+
+#body {
+	margin: 0;
+	padding: 0 2rem;
+}
+
+#wrapper {
+	width: calc(100% - 4rem);
+	height: calc(100% - 4rem);
+	margin: 2rem;
+	padding: 0;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	canvas {
+		box-shadow: 2px 2px 1rem hsl(0, 0%, 5%);
+		border: 1px solid hsl(0, 0%, 10%);
+		border-radius: 4px;
+	}
+}
