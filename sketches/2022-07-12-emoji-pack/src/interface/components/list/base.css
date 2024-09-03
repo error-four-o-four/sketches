@@ -1,0 +1,36 @@
+.ul-component {
+	list-style: none;
+	padding: 0;
+
+	li {
+		position: relative;
+		opacity: 1;
+		cursor: pointer;
+	}
+
+	li.hidden {
+		opacity: 0;
+	}
+}
+
+.ul-component:empty::after {
+	font-size: 0.75rem;
+}
+
+.ul-component.removable {
+
+	li::after {
+		content: '❌';
+		position: absolute;
+		font-size: 0.75rem;
+		top: -0.375rem;
+		right: -0.5rem;
+		opacity: 0;
+		transition: opacity 0.2s, top 0.2s;
+	}
+
+	li.removable::after {
+		top: -0.5rem;
+		opacity: 1;
+	}
+}

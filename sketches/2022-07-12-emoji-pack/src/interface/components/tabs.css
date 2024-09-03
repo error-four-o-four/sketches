@@ -1,0 +1,23 @@
+.tab-component {
+	.tab-link-wrap {
+		display: inline-flex;
+	}
+
+	.tab-link-wrap > div {
+		cursor: pointer;
+	}
+
+	.tab-item-wrap > div {
+		display: none;
+		transition: opacity 0.2s;
+	}
+
+	.tab-item-wrap > div.selected {
+		display: block;
+		opacity: 1;
+	}
+
+	.tab-item-wrap > div.hidden {
+		opacity: 0;
+	}
+}

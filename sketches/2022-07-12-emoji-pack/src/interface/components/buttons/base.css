@@ -1,0 +1,15 @@
+.button-component {
+	display: inline-block;
+
+	input {
+		display: none;
+	}
+
+	label {
+		cursor: pointer;
+	}
+}
+
+.radios-component {
+	display: inline-block;
+}

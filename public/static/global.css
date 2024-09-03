@@ -9,6 +9,17 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
+  --clr-base-05: hsl(0, 0%, 5%);
+	--clr-base-10: hsl(0, 0%, 10%);
+	--clr-base-12: hsl(0, 0%, 12.5%);
+	--clr-base-15: hsl(0, 0%, 15%);
+	--clr-base-20: hsl(0, 0%, 20%);
+	--clr-base-25: hsl(0, 0%, 25%);
+	--clr-base-30: hsl(0, 0%, 30%);
+	--border-radius: 0.25rem;
+	--box-shadow-clr: var(--clr-base-05);
+	--box-shadow: 0 2px 0.5rem var(--box-shadow-clr);
+
   color-scheme: dark light;
   background-color: hsl(0, 0%, 10%);
   color: #eee;
