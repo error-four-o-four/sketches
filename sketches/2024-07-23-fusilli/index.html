@@ -5,16 +5,17 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
 		<link rel="stylesheet" href="/static/global.css">
+		<link rel="stylesheet" href="/static/page.css">
 		<title>Fusilli 2024-07-23</title>
 	</head>
 	<body>
 		<main>
-			<div id="wrapper"></div>
-			<div id="content">
+			<section id="head">
+				<div id="wrapper"></div>
+			</section>
+			<section id="body">
 				<h1>Fusilli</h1>
-				<h4>2024-07-23</h4>
 				<p>Click on canvas to regenerate.</p>
-
 				<pre>
 type TileData = {
 	coords: [number, number];
@@ -43,7 +44,7 @@ type EdgeData = {
 					<img src="./assets/output256x256b.png">
 					<img src="./assets/output256x256c.png">
 				</div>
-			</div>
+			</section>
 		</main>
 		<script src="/p5.js/1.9.4/p5.min.js"></script>
 		<script type="module">

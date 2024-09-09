@@ -4,21 +4,6 @@ main {
 	padding: 0;
 }
 
-#wrapper {
-	height: var(--elt-size);
-	margin: 0 auto;
-	padding: 2rem 0;
-	aspect-ratio: 1;
-	display: flex;
-	justify-content: center;
-  align-items: center;
-
-	canvas {
-		box-shadow: 2px 2px 1rem #0009;
-		border: 1px solid #fff3;
-	}
-}
-
 #wrapper.loading:after {
 	content: 'Loading ...';
 	display: block;
@@ -29,10 +14,8 @@ main {
 	border-radius: 0.125rem;
 }
 
-#content {
+#body {
 	position: relative;
-	width: var(--elt-size);
-	margin: 0 auto;
 
 	pre {
 		background-color: #0003;
@@ -55,17 +38,5 @@ main {
 		display: grid;
 		grid-template-columns: auto auto;
 		column-gap: 1rem;
-	}
-}
-
-@media (orientation: landscape) {
-	:root {
-		--elt-size: calc(100vh - 2 * 2rem);
-	}
-}
-
-@media (orientation: portrait) {
-	:root {
-		--elt-size: calc(100vw - 2 * 2rem);
 	}
 }

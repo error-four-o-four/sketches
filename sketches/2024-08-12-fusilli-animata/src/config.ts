@@ -1,6 +1,9 @@
 import type { TileType } from "./types.js";
 
-export const CANVAS_SIZE = Math.min(window.innerWidth, window.innerHeight);
+const wrapper = document.getElementById('wrapper')!;
+
+export const CANVAS_SIZE = Math.min(wrapper.clientWidth, wrapper.clientHeight);
+// export const CANVAS_SIZE = Math.min(window.innerWidth, window.innerHeight);
 // export const CANVAS_SIZE = 720;
 
 // amount per edge

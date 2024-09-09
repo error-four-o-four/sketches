@@ -14,6 +14,7 @@ import type {
 const input = [
 	'2024-08-12-fusilli-animata',
 	'2024-07-23-fusilli',
+	'2022-07-12-emoji-pack'
 ] as const;
 
 const project = fileURLToPath(new URL('./', import.meta.url));
