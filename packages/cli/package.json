@@ -15,7 +15,7 @@
     "fetch": "./dist/fetch.cjs"
   },
   "devDependencies": {
-    "pkgroll": "^2.4.2",
+    "pkgroll": "^2.5.0",
     "prettier": "^3.3.3"
   },
   "dependencies": {

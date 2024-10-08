@@ -22,11 +22,11 @@
   "devDependencies": {
     "@internal/cdn": "^0.0.1",
     "@internal/cli": "^0.0.1",
-    "@types/node": "^22.1.0",
+    "@types/node": "^22.7.5",
     "@types/p5": "^1.7.6",
-    "esbuild": "^0.23.0",
+    "esbuild": "^0.24.0",
     "node-html-parser": "^6.1.13",
     "prettier": "^3.3.3",
-    "vite": "^5.3.5"
+    "vite": "^5.4.8"
   }
 }
