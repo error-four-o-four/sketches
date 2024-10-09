@@ -20,7 +20,7 @@
     "fetch": "@internal/cli/fetch"
   },
   "devDependencies": {
-    "@internal/cdn": "^0.0.1",
+    "@internal/cdn": "^0.0.2",
     "@internal/cli": "^0.0.1",
     "@types/node": "^22.7.5",
     "@types/p5": "^1.7.6",

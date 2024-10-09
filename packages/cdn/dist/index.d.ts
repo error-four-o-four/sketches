@@ -24,7 +24,8 @@ declare class LibHandler {
     private keys;
     constructor(path: string);
     private createLibraryData;
-    private updateLibraryData;
+    private saveLibraryData;
+    private isOutdated;
     private download;
     fetch(name: string, version: string | null): Promise<void>;
     has(src: string): boolean;
