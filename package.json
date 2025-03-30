@@ -22,11 +22,17 @@
   "devDependencies": {
     "@internal/cdn": "^0.0.2",
     "@internal/cli": "^0.0.1",
-    "@types/node": "^22.7.5",
+    "@internal/utils": "^0.0.1",
+    "@types/node": "^22.13.14",
     "@types/p5": "^1.7.6",
-    "esbuild": "^0.24.0",
+    "emoji-pack": "^0.0.0",
+    "esbuild": "^0.24.2",
+    "fusilli": "^0.0.0",
+    "fusilli-animata": "^0.0.0",
     "node-html-parser": "^6.1.13",
-    "prettier": "^3.3.3",
-    "vite": "^5.4.8"
+    "prettier": "^3.5.3",
+    "tmpl-global-mode": "^0.0.0",
+    "tmpl-instance-mode": "^0.0.0",
+    "vite": "^5.4.15"
   }
 }

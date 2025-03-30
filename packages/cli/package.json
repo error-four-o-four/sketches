@@ -15,8 +15,10 @@
     "fetch": "./dist/fetch.cjs"
   },
   "devDependencies": {
-    "pkgroll": "^2.5.0",
-    "prettier": "^3.3.3"
+    "@internal/cdn": "file:../cdn",
+    "@internal/utils": "file:../utils",
+    "pkgroll": "^2.12.1",
+    "prettier": "^3.5.3"
   },
   "dependencies": {
     "@internal/cdn": "file:../cdn",

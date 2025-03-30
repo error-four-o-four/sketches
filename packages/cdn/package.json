@@ -19,8 +19,9 @@
   },
   "devDependencies": {
     "@internal/cli": "^0.0.1",
-    "pkgroll": "^2.5.0",
-    "prettier": "^3.3.3"
+    "@internal/utils": "file:../utils",
+    "pkgroll": "^2.12.1",
+    "prettier": "^3.5.3"
   },
   "dependencies": {
     "@internal/utils": "file:../utils"
