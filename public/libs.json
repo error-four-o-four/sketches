@@ -1,6 +1,6 @@
 {
   "p5.js": {
-    "latest": "1.10.0",
+    "latest": "1.11.3",
     "filename": "p5.min.js",
     "versions": {
       "1.10.0": {
@@ -10,8 +10,12 @@
       "1.9.4": {
         "url": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js",
         "sri": "sha512-d6sc8kbZEtA2LwB9m/ck0FhvyUwVfdmvTeyJRprmj7Wg9wRFtHDIpr6qk4g/y3Ix3O9I6KHIv6SGu9f7RaP1Gw=="
+      },
+      "1.11.3": {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.min.js",
+        "sri": "sha512-I0Pwwz3PPNQkWes+rcSoQqikKFfRmTfGQrcNzZbm8ALaUyJuFdyRinl805shE8xT6iEWsWgvRxdXb3yhQNXKoA=="
       }
     },
-    "updatedAt": "2024-08-07T21:20:38.883Z"
+    "updatedAt": "2025-04-01T15:01:50.362Z"
   }
 }
